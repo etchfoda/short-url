@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use AshAllenDesign\ShortURL\Providers\ShortURLProvider;
 
 /**
  * Class ShortURL.
@@ -121,7 +122,9 @@ class ShortURL extends Model
      */
     public function visits(): HasMany
     {
-        return $this->hasMany(ShortURLVisit::class, 'short_url_id');
+        $modelVisit = ShortURLProvider::getShortURLVisitModelInstance();
+
+        return $this->hasMany($modelVisit, 'short_url_id');
     }
 
     /**

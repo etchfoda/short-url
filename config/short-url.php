@@ -173,4 +173,7 @@ return [
     |
     */
     'validate_config' => false,
+
+    'short_url_model' => \AshAllenDesign\ShortURL\Models\ShortURL::class,
+    'short_url_visit_model' => \AshAllenDesign\ShortURL\Models\ShortURLVisit::class,
 ];

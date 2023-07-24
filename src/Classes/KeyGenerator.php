@@ -4,6 +4,7 @@ namespace AshAllenDesign\ShortURL\Classes;
 
 use AshAllenDesign\ShortURL\Models\ShortURL;
 use Hashids\Hashids;
+use AshAllenDesign\ShortURL\Providers\ShortURLProvider;
 
 class KeyGenerator
 {
@@ -40,11 +41,12 @@ class KeyGenerator
     public function generateRandom(): string
     {
         $ID = $this->getLastInsertedID();
+        $model = ShortURLProvider::getShortURLModelInstance();
 
         do {
             $ID++;
             $key = $this->hashids->encode($ID);
-        } while (ShortURL::where('url_key', $key)->exists());
+        } while ($model::where('url_key', $key)->exists());
 
         return $key;
     }
@@ -76,7 +78,9 @@ class KeyGenerator
      */
     protected function getLastInsertedID(): int
     {
-        if ($lastInserted = ShortURL::latest()->select('id')->first()) {
+        $model = ShortURLProvider::getShortURLModelInstance();
+
+        if ($lastInserted = $model::latest()->select('id')->first()) {
             return $lastInserted->id;
         }
 

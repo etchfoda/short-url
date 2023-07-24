@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use AshAllenDesign\ShortURL\Providers\ShortURLProvider;
 
 /**
  * Class ShortURLVisit.
@@ -103,6 +104,8 @@ class ShortURLVisit extends Model
      */
     public function shortURL(): BelongsTo
     {
-        return $this->belongsTo(ShortURL::class, 'short_url_id');
+        $model = ShortURLProvider::getShortURLModelInstance();
+        
+        return $this->belongsTo($model::class, 'short_url_id');
     }
 }

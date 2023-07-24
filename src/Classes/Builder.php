@@ -2,6 +2,7 @@
 
 namespace AshAllenDesign\ShortURL\Classes;
 
+use AshAllenDesign\ShortURL\Providers\ShortURLProvider;
 use AshAllenDesign\ShortURL\Controllers\ShortURLController;
 use AshAllenDesign\ShortURL\Exceptions\ShortURLException;
 use AshAllenDesign\ShortURL\Exceptions\ValidationException;
@@ -512,7 +513,9 @@ class Builder
 
         $this->checkKeyDoesNotExist();
 
-        $shortURL = ShortURL::create($data);
+        $model = ShortURLProvider::getShortURLModelInstance();
+
+        $shortURL = $model::create($data);
 
         $this->resetOptions();
 
@@ -557,7 +560,8 @@ class Builder
      */
     protected function checkKeyDoesNotExist(): void
     {
-        if (ShortURL::where('url_key', $this->urlKey)->exists()) {
+        $model = ShortURLProvider::getShortURLModelInstance();
+        if ($model::where('url_key', $this->urlKey)->exists()) {
             throw new ShortURLException('A short URL with this key already exists.');
         }
     }

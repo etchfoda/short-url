@@ -6,6 +6,7 @@ use AshAllenDesign\ShortURL\Classes\Resolver;
 use AshAllenDesign\ShortURL\Models\ShortURL;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use AshAllenDesign\ShortURL\Providers\ShortURLProvider;
 
 class ShortURLController
 {
@@ -21,7 +22,9 @@ class ShortURLController
      */
     public function __invoke(Request $request, Resolver $resolver, string $shortURLKey): RedirectResponse
     {
-        $shortURL = ShortURL::where('url_key', $shortURLKey)->firstOrFail();
+        $model = ShortURLProvider::getShortURLModelInstance();
+
+        $shortURL = $model::where('url_key', $shortURLKey)->firstOrFail();
 
         $resolver->handleVisit(request(), $shortURL);
 
