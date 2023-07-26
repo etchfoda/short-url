@@ -24,7 +24,15 @@ class ShortURLController
     {
         $model = ShortURLProvider::getShortURLModelInstance();
 
-        $shortURL = $model::where('url_key', $shortURLKey)->firstOrFail();
+        $shortURL = $model::where('url_key', $shortURLKey)->first();
+
+        if(!$shortURL)
+        {
+            $failedPath = config('short-url.failed_path', null);
+            if(!empty($failedPath))
+                return redirect($failedPath);
+            abort(404);
+        }
 
         $resolver->handleVisit(request(), $shortURL);
 

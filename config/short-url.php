@@ -176,4 +176,5 @@ return [
 
     'short_url_model' => \AshAllenDesign\ShortURL\Models\ShortURL::class,
     'short_url_visit_model' => \AshAllenDesign\ShortURL\Models\ShortURLVisit::class,
+    'failed_path' => null,
 ];
