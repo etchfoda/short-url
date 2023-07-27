@@ -407,7 +407,7 @@ class Builder
      */
     public function urlKey(string $key): self
     {
-        $this->urlKey = urlencode($key);
+        $this->urlKey = ($key);
 
         return $this;
     }
@@ -677,6 +677,6 @@ class Builder
             $baseUrl .= $this->prefix().'/';
         }
 
-        return $baseUrl.$this->urlKey;
+        return $baseUrl.urlencode($this->urlKey);
     }
 }

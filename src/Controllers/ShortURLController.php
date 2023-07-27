@@ -24,7 +24,7 @@ class ShortURLController
     {
         $model = ShortURLProvider::getShortURLModelInstance();
 
-        $shortURL = $model::where('url_key', $shortURLKey)->first();
+        $shortURL = $model::where('url_key', urldecode($shortURLKey))->first();
 
         if(!$shortURL)
         {
