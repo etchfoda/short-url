@@ -80,10 +80,6 @@ class KeyGenerator
     {
         $model = ShortURLProvider::getShortURLModelInstance();
 
-        if ($lastInserted = $model::latest()->select('id')->first()) {
-            return $lastInserted->id;
-        }
-
-        return 0;
+        return $model::max('id') ?? 0;
     }
 }

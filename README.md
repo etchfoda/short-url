@@ -28,6 +28,7 @@
             - [Tracking Operating System & Operating System Version](#tracking-operating-system--operating-system-version)
             - [Tracking Device Type](#tracking-device-type)
             - [Tracking Referer URL](#tracking-referer-url)
+        - [Custom Short URL Fields](#custom-short-url-fields)
         - [Single Use](#single-use)
         - [Enforce HTTPS](#enforce-https)
         - [Forwarding Query Parameters](#forwarding-query-parameters)
@@ -47,6 +48,7 @@
             - [Default Tracking](#default-tracking)
             - [Tracking Fields](#tracking-fields)
         - [Config Validation](#config-validation)
+        - [Custom Database Connection](#custom-database-connection)
     - [Helper Methods](#helper-methods)
         - [Visits](#visits)
         - [Find by URL Key](#find-by-url-key)
@@ -233,6 +235,29 @@ $builder = new \AshAllenDesign\ShortURL\Classes\Builder();
 
 $shortURLObject = $builder->destinationUrl('https://destination.com')->trackVisits()->trackRefererURL()->make();
 ```
+
+#### Custom Short URL Fields
+
+There may be times when you want to add your own custom fields to the ShortURL model and store them in the database. For example, you might want to associate the short URL with a tenant, organisation, user, etc.
+
+To do this you can use the `beforeCreate` method when building your short URL. This method accepts a closure that receives the `AshAllenDesign\ShortURL\Models\ShortURL` model instance before it's saved to your database.
+
+The example below shows how to add a `tenant_id` field to the `AshAllenDesign\ShortURL\Models\ShortURL` model:
+
+```php
+use AshAllenDesign\ShortURL\Models\ShortURL;
+use AshAllenDesign\ShortURL\Facades\ShortURL as ShortUrlBuilder;
+
+$tenantId = 123;
+
+$shortURL = ShortUrlBuilder::destinationUrl($url)
+    ->beforeCreate(function (ShortURL $model): void {
+        $model->tenant_id = $tenantId;
+    })
+    ->make();
+```
+
+Please remember that to store custom fields in the database, you'll have to make sure those fields are added to the `short_urls` table. You can do this by creating a new migration that adds the fields to the table, or by updating the migrations that ship with this package.
 
 #### Single Use
 By default, all of the shortened URLs can be visited for as long as you leave them available. However, you may want to
@@ -564,6 +589,16 @@ following option in the config:
 ```
 'validate_config' => true,
 ``` 
+
+#### Custom Database Connection
+
+By default, Short URL will use your application's default database connection. But there may be times that you'd like to use a different connection. For example, you might be building a multi-tenant application that uses a separate connection for each tenant, and you may want to store the short URLs in a central database.
+
+To do this, you can set the connection name using the `connection` config value in the `config/short-url.php` file like so:
+
+```
+'connection' => 'custom_database_connection_name',
+```
 
 ### Helper Methods
 #### Visits

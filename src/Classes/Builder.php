@@ -8,6 +8,7 @@ use AshAllenDesign\ShortURL\Exceptions\ShortURLException;
 use AshAllenDesign\ShortURL\Exceptions\ValidationException;
 use AshAllenDesign\ShortURL\Models\ShortURL;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
@@ -161,6 +162,14 @@ class Builder
      * @var int|null
      */
     protected ?int $generateKeyUsing = null;
+
+    /**
+     * Define a callback to access the ShortURL
+     * model prior to creation.
+     *
+     * @var Closure|null
+     */
+    protected ?Closure $beforeCreateCallback = null;
 
     /**
      * Builder constructor.
@@ -489,9 +498,28 @@ class Builder
         return $this;
     }
 
+    /**
+     * Set the seed to be used when generating a short URL key.
+     *
+     * @param  int  $generateUsing
+     * @return $this
+     */
     public function generateKeyUsing(int $generateUsing): self
     {
         $this->generateKeyUsing = $generateUsing;
+
+        return $this;
+    }
+
+    /**
+     * Pass the Short URL model into the callback before it is created.
+     *
+     * @param  Closure  $callback
+     * @return $this
+     */
+    public function beforeCreate(Closure $callback): self
+    {
+        $this->beforeCreateCallback = $callback;
 
         return $this;
     }
@@ -515,7 +543,13 @@ class Builder
 
         $model = ShortURLProvider::getShortURLModelInstance();
 
-        $shortURL = $model::create($data);
+        $shortURL = new $model($data);
+
+        if ($this->beforeCreateCallback) {
+            value($this->beforeCreateCallback, $shortURL);
+        }
+
+        $shortURL->save();
 
         $this->resetOptions();
 
@@ -532,22 +566,22 @@ class Builder
         $this->setOptions();
 
         return [
-            'destination_url'                => $this->destinationUrl,
-            'default_short_url'              => $this->buildDefaultShortUrl(),
-            'url_key'                        => $this->urlKey,
-            'single_use'                     => $this->singleUse,
-            'forward_query_params'           => $this->forwardQueryParams,
-            'track_visits'                   => $this->trackVisits,
-            'redirect_status_code'           => $this->redirectStatusCode,
-            'track_ip_address'               => $this->trackIPAddress,
-            'track_operating_system'         => $this->trackOperatingSystem,
+            'destination_url' => $this->destinationUrl,
+            'default_short_url' => $this->buildDefaultShortUrl(),
+            'url_key' => $this->urlKey,
+            'single_use' => $this->singleUse,
+            'forward_query_params' => $this->forwardQueryParams,
+            'track_visits' => $this->trackVisits,
+            'redirect_status_code' => $this->redirectStatusCode,
+            'track_ip_address' => $this->trackIPAddress,
+            'track_operating_system' => $this->trackOperatingSystem,
             'track_operating_system_version' => $this->trackOperatingSystemVersion,
-            'track_browser'                  => $this->trackBrowser,
-            'track_browser_version'          => $this->trackBrowserVersion,
-            'track_referer_url'              => $this->trackRefererURL,
-            'track_device_type'              => $this->trackDeviceType,
-            'activated_at'                   => $this->activateAt,
-            'deactivated_at'                 => $this->deactivateAt,
+            'track_browser' => $this->trackBrowser,
+            'track_browser_version' => $this->trackBrowserVersion,
+            'track_referer_url' => $this->trackRefererURL,
+            'track_device_type' => $this->trackDeviceType,
+            'activated_at' => $this->activateAt,
+            'deactivated_at' => $this->deactivateAt,
         ];
     }
 
@@ -658,6 +692,11 @@ class Builder
         $this->trackBrowserVersion = null;
         $this->trackRefererURL = null;
         $this->trackDeviceType = null;
+
+        $this->activateAt = null;
+        $this->deactivateAt = null;
+        $this->generateKeyUsing = null;
+        $this->beforeCreateCallback = null;
 
         return $this;
     }

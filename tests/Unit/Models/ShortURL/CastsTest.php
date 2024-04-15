@@ -7,12 +7,9 @@ namespace AshAllenDesign\ShortURL\Tests\Unit\Models\ShortURL;
 use AshAllenDesign\ShortURL\Models\ShortURL;
 use AshAllenDesign\ShortURL\Tests\Unit\TestCase;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
 final class CastsTest extends TestCase
 {
-    use LazilyRefreshDatabase;
-
     /** @test */
     public function carbon_date_objects_are_returned(): void
     {
@@ -30,5 +27,13 @@ final class CastsTest extends TestCase
         $this->assertInstanceOf(Carbon::class, $shortUrl->deactivated_at);
         $this->assertInstanceOf(Carbon::class, $shortUrl->created_at);
         $this->assertInstanceOf(Carbon::class, $shortUrl->updated_at);
+    }
+
+    /** @test */
+    public function forward_query_params_is_casted_correctly(): void
+    {
+        $shortUrl = ShortURL::factory()->create(['forward_query_params' => 1]);
+
+        $this->assertTrue($shortUrl->forward_query_params);
     }
 }

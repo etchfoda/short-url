@@ -47,7 +47,7 @@ class ShortURLVisit extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array<int,string>
      */
     protected $fillable = [
         'short_url_id',
@@ -82,8 +82,17 @@ class ShortURLVisit extends Model
      */
     protected $casts = [
         'short_url_id' => 'integer',
-        'visited_at'   => 'datetime',
+        'visited_at' => 'datetime',
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        if (config('short-url.connection')) {
+            $this->setConnection(config('short-url.connection'));
+        }
+    }
 
     /**
      * @return Factory<ShortURLVisit>

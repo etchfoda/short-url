@@ -1,5 +1,30 @@
 # Changelog
 
+**v7.10.0 (released 2024-03-19):**
+
+- Added support for nesbot/carbon 3.0. [#246](https://github.com/ash-jc-allen/short-url/pull/246)
+
+**v7.9.0 (released 2024-03-12):**
+
+- Added support for Laravel 11. [#239](https://github.com/ash-jc-allen/short-url/pull/239)
+- Only add the "utf8mb4_bin" collation if using MySQL. [#241](https://github.com/ash-jc-allen/short-url/pull/241)
+
+**v7.8.2 (released 2024-02-12):**
+- Fixed a bug in the `ShortURL` model that prevented a boolean field from being cast. [#234](https://github.com/ash-jc-allen/short-url/pull/234)
+- Added missing methods to the `ShortURL` facade's docblock. [#233](https://github.com/ash-jc-allen/short-url/pull/233)
+
+**v7.8.1 (released 2023-12-28):**
+- Fixed bug in a database migration that was using the wrong database connection. [#228](https://github.com/ash-jc-allen/short-url/pull/228)
+- Code style fixes. [#230](https://github.com/ash-jc-allen/short-url/pull/230)
+
+**v7.8.0 (released 2023-11-11):**
+- Added the ability to store custom database fields when creating short URLs. [#225](https://github.com/ash-jc-allen/short-url/pull/225)
+
+**v7.7.0 (released 2023-10-26):**
+- Added the ability to specify the database connection for the package's models. [#214](https://github.com/ash-jc-allen/short-url/pull/214)
+- Improve the query key generation performance. [#213](https://github.com/ash-jc-allen/short-url/pull/213)
+- Added PHP 8.3 CI tests. [#217](https://github.com/ash-jc-allen/short-url/pull/217)
+
 **v7.6.0 (released 2023-03-21):**
 - Added support for `hashids/hashids` v5.0. [#183](https://github.com/ash-jc-allen/short-url/pull/183)
 - Added the ability to pass a seed that can be used when generating the short URL key. [#185](https://github.com/ash-jc-allen/short-url/pull/185)
